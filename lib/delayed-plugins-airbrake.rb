@@ -12,8 +12,17 @@ module Delayed::Plugins::Airbrake
           :error_class   => error.class.name,
           :error_message => "#{error.class.name}: #{error.message}",
           :parameters    => {
-            :failed_job => job.inspect,
-          }
+            :id => job.id,
+            :queue => job.queue,
+            :handler => job.handler,
+            :payload_object => job.payload_object.object rescue "",
+            :payload_method => job.payload_object.method_name rescue "",
+            :payload_args => job.payload_object.args rescue [],
+            :last_error => job.last_error,
+            :locked_by => job.locked_by,
+            :failed_at => job.failed_at,
+            :created_at => job.created_at
+            }
         )
         super if defined?(super)
       end
